@@ -5,16 +5,16 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
 
-    <body onload="initGame()">
+    <body onload="initGame()" onkeyup="handleKey(event)">
         <div class="header">
             <h2 class="timer">000</h2>
-            <h2>Score: <span>0</span></h2>
+            <h2 class="score">Score: <span>0</span></h2>
         </div>
         <div class="board-container"></div>
-        <!-- <div class="game-over">
+        <div class="game-over">
             <button class="btn-close" onclick="closeModal()">x</button>
             <h3></h3>
-            <button class="btn-new-game" onclick="init()">New Game</button>-->
+            <button class="btn-new-game" onclick="initGame()">New Game</button>
         </div>
         <script src="js/main.js"></script>
         <script src="js/utils.js"></script>

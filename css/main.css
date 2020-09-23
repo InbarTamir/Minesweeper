@@ -48,3 +48,24 @@ body {
     color: black;
     font-size: 15px;
 }
+
+.game-over {
+    display: inline-block;
+    margin-top: -38px;
+    padding: 5px;
+    width: 300px;
+    height: 80px;
+    text-align: center;
+    background-color: rgb(0, 183, 255);
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  
+  .btn-new-game {
+    display: block;
+    margin: auto;
+  }
+  
+  .btn-close {
+    float: right;
+  }
