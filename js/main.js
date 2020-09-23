@@ -175,6 +175,23 @@ function closeModal() {
     elModal.style.display = 'none';
 }
 
+function changeLevel(elRadio) {
+    if (!gStartTime) initGame();
+    var size = +elRadio.value;
+    if (size !== gLevel.size) {
+        var stopTime = Date.now();
+        var isReset = confirm('Reset the game?');
+        if (isReset) initGame();
+        else {
+            elRadio.checked = false;
+            var elPrevRadio = document.querySelector(`input[value="${gLevel.size}"]`);
+            elPrevRadio.checked = true;
+            var delayTime = Date.now() - stopTime;
+            gStartTime += delayTime;
+        }
+    }
+}
+
 function expandShown(board, elCell, i, j) {
 
 }

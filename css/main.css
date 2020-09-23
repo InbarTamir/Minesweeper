@@ -13,6 +13,11 @@ body {
     margin: 0 50px;
 }
 
+input {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
 .board {
     border: 1px solid grey;
     margin: 40px auto;
