@@ -1,0 +1,50 @@
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.header {
+    margin-top: 20px;
+}
+
+.header h2 {
+    display: inline;
+    margin: 0 50px;
+}
+
+.board {
+    border: 1px solid grey;
+    margin: 40px auto;
+    border-spacing: 0;
+    background-color: rgba(122, 122, 122, 0.753);
+}
+
+.cell {
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border: 1px dotted rgb(53, 53, 53);
+    background-color: rgba(122, 122, 122, 0.753);
+}
+
+.cell:hover {
+    cursor: pointer;
+}
+
+.hide {
+    background-color: rgb(70, 70, 70);
+    border: 1px solid rgba(255, 255, 255, 0.678);
+    border-bottom-color: grey;
+    border-right-color: grey;
+    color: rgba(0, 0, 0, 0);
+}
+
+.flag {
+    color: black;
+    font-size: 15px;
+}
