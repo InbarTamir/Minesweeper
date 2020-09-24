@@ -55,22 +55,25 @@ input {
 }
 
 .game-over {
-    display: inline-block;
     margin-top: -38px;
     padding: 5px;
     width: 300px;
     height: 80px;
     text-align: center;
+    display: inline-block;
+    position: absolute;
+    top: 100px;
+    right: 245px;
     background-color: rgb(0, 183, 255);
     border: 1px solid black;
     border-radius: 5px;
-  }
-  
-  .btn-new-game {
+}
+
+.btn-new-game {
     display: block;
     margin: auto;
-  }
-  
-  .btn-close {
+}
+
+.btn-close {
     float: right;
-  }
+}

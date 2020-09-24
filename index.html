@@ -13,11 +13,11 @@
             <div class="level">
                 <h4>Choose Your Level:</h4>
                 <label for="easy">Beginner</label>
-                <input type="radio" name="level" id="easy" value="4" onclick="changeLevel(this)" checked>
+                <input type="radio" name="level" id="easy" value="4" data-mines="2" onclick="changeLevel(this)" checked>
                 <label for="medium">Medium</label>
-                <input type="radio" name="level" id="medium" value="8" onclick="changeLevel(this)">
+                <input type="radio" name="level" id="medium" value="8" data-mines="12" onclick="changeLevel(this)">
                 <label for="expert">Expert</label>
-                <input type="radio" name="level" id="expert" value="12" onclick="changeLevel(this)">
+                <input type="radio" name="level" id="expert" value="12" data-mines="30" onclick="changeLevel(this)">
             </div>
         </div>
         <div class="board-container"></div>
