@@ -19,12 +19,25 @@ function renderBoard(board) {
 }
 
 function renderCell(location, value) {
+  var strMove = `var location = ${location}; var value = ${value}; `;
   var elCell = document.querySelector(`.cell-${location.i}-${location.j}`);
+  strMove += `var elCell = ${elCell}; `;
   elCell.innerHTML = value;
-  if (value === MINE) elCell.classList.add('mine');
-  if (!gBoard[location.i][location.j].isShown) return;
+  strMove += 'elCell.innerHTML = value; ';
+  if (value === MINE) {
+    elCell.classList.add('mine');
+    strMove += `elCell.classList.remove('mine'); `;
+  }
+  if (!gBoard[location.i][location.j].isShown) {
+    gMoves.push(strMove);
+    return;
+  }
   elCell.classList.remove('hide');
+  strMove += `elCell.classList.add('hide'); `;
   elCell.style.textShadow = '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black';
+  strMove += `elCell.style.textShadow = 'none'; `;
+  strMove += `elCell.style.color = 'rgba(0, 0, 0, 0)'; `;
+  gMoves.push(strMove);
   switch (value) {
     case 1:
       elCell.style.color = 'dodgerBlue';
@@ -82,8 +95,8 @@ function updateTimer() {
 }
 
 function getClassName(location) {
-	var cellClass = 'cell-' + location.i + '-' + location.j;
-	return cellClass;
+  var cellClass = 'cell-' + location.i + '-' + location.j;
+  return cellClass;
 }
 
 function getRandomIntInclusive(min, max) {

@@ -108,7 +108,9 @@ function setMinesNegsCount(board) {
 }
 
 function cellClicked(elCell, i, j) {
+    var strMove = `var elCell = ${elCell}; var i = ${i}; var j = ${j}; `
     var currCell = gBoard[i][j];
+    strMove = `var currCell = ${currCell}; `;
     if (!gGame.isOn || currCell.isMarked || currCell.isShown) return;
     // First Click
     if (!gStartTime) {
@@ -125,13 +127,23 @@ function cellClicked(elCell, i, j) {
             return;
         }
         if (currCell.isMine) {
+            strMove += `elCell.style.backgroundColor = ${elCell.style.backgroundColor}; `;
             elCell.style.backgroundColor = 'red';
             currCell.isShown = true;
+            strMove += 'currCell.isShown = false; ';
             gGame.shownCount++;
+            strMove += 'gGame.shownCount--; ';
             gLives--;
-            document.querySelector('.lives span').innerText = gLives;
+            strMove += 'gLives++; ';
+            var elLives = document.querySelector('.lives span');
+            strMove += `var elLives = ${elLives}; `;
+            elLives.innerText = gLives;
+            strMove += `elLives.innerText = ${gLives}; `;
             var elMinesLeft = document.querySelector('.mines-left span');
+            strMove += `var elMinesLeft = ${elMinesLeft}; `;
+            strMove += `elMinesLeft.innerText = ${elMinesLeft.innerText}; `;
             elMinesLeft.innerText = +elMinesLeft.innerText - 1;
+            gMoves.push(strMove);
             if (gLives) {
                 renderCell({ i, j }, MINE);
                 checkGameOver();
@@ -149,6 +161,7 @@ function cellClicked(elCell, i, j) {
 function cellMarked(elCell, i, j) {
     var currCell = gBoard[i][j];
     if (!gGame.isOn || currCell.isShown) return;
+    var strMove = `var currCell = ${currCell}; `;
 
     if (!currCell.isMarked) { // Add Flag
         if (gGame.markedCount === gLevel.mines) return;
@@ -160,17 +173,25 @@ function cellMarked(elCell, i, j) {
             currCellContent: elCell.innerHTML
         };
         gFlags.push(flag);
+        strMove += `gFlags.pop(); `;
         currCell.isMarked = true;
+        strMove += 'currCell.isMarked = false; ';
         gGame.markedCount++;
+        strMove += 'gGame.markedCount--; ';
         renderCell(flag.location, FLAG);
     } else { // Remove Flag
         var flagIdx = gFlags.findIndex((flag) => flag.location.i === i && flag.location.j === j);
         var currFlag = (flagIdx >= 0) ? gFlags.splice(flagIdx, 1)[0] : null;
+        strMove += `var currFlag = ${currFlag}; `;
         currCell.isMarked = false;
+        strMove += `currCell.isMarked = true; `;
         renderCell({ i, j }, currFlag.currCellContent || '');
         gGame.markedCount--;
+        strMove += 'gGame.markedCount++; ';
     }
     elCell.classList.toggle('flag');
+    strMove += `elCell.classList.toggle('flag'); `;
+    gMoves.push(strMove);
     checkGameOver();
 }
 
@@ -207,11 +228,16 @@ function changeLevel(elRadio) {
 
 function expandShown(board, elCell, i, j) {
     var currCell = board[i][j];
+    var strMove = `var currCell = ${currCell}; `;
     if (currCell.minesAroundCount) {
         currCell.isShown = true;
+        strMove += 'currCell.isShown = false; ';
         gGame.shownCount++;
+        strMove += 'gGame.shownCount--; ';
         elCell.classList.remove('hide');
+        strMove += `${elCell}.classList.add('hide'); `;
         renderCell({ i, j }, currCell.minesAroundCount || '');
+        gMoves.push(strMove);
     } else {
         showFirstNegs(board, i, j);
     }
@@ -219,29 +245,41 @@ function expandShown(board, elCell, i, j) {
 }
 
 function showFirstNegs(board, rowIdx, colIdx) {
+    var strMove = '';
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= board.length) continue;
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board.length) continue;
             var currCell = board[i][j];
+            strMove += `var currCell = ${currCell}; `;
             if (!currCell.isMine && !currCell.isShown) {
                 currCell.isShown = true;
+                strMove += 'currCell.isShown = false; ';
                 gGame.shownCount++;
+                strMove += 'gGame.shownCount--; ';
                 renderCell({ i, j }, currCell.minesAroundCount || '');
             }
         }
     }
+    gMoves.push(strMove);
 }
 
 function useHint(i, j) {
     if (!gStartTime) return;
     var elList = document.querySelector('.hints-list');
+    var strMove = `var elList = ${elList}; `;
     if (!gIsHintMode) {
         elList.lastChild.classList.add('hint-mode');
+        strMove += `elList.lastChild.classList.remove('hint-mode'); `;
         gIsHintMode = true;
+        strMove += 'gIsHintMode = false; ';
+        gMoves.push(strMove);
         return;
     } else if (i || j) {
         renderCellsHint(i, j);
+        strMove += `elList.appendChild(${elList.lastChild}); `;
+        strMove += 'gIsHintMode = true; ';
+        gMoves.push(strMove);
         setTimeout(() => {
             elList.lastChild.remove();
             gIsHintMode = false;
@@ -266,12 +304,21 @@ function renderCellsHint(rowIdx, colIdx) {
 }
 
 function checkNewHighscore() {
-    debugger;
     var currScore = gGame.secsPassed;
+    var strMove = `var currScore = ${currScore}; `;
     var currLevel = gLevel.size;
+    strMove += `var currLevel = ${currLevel}; `;
     var highScore = localStorage.getItem(currLevel);
-    if (!highScore || currScore < highScore) localStorage.setItem(currLevel, currScore);
-    document.querySelector('.highscore span').innerText = localStorage.getItem(gLevel.size);
+    strMove += `var highScore = ${highScore}; `;
+    if (!highScore || currScore < highScore) {
+        localStorage.setItem(currLevel, currScore);
+        strMove += `localStorage.setItem(currLevel, highScore); `;
+    }
+    var elBest = document.querySelector('.highscore span');
+    strMove += `var elBest = ${elBest}; `;
+    strMove += `elBest.innerText = localStorage.getItem(gLevel.size); `;
+    elBest.innerText = localStorage.getItem(gLevel.size);
+    gMoves.push(strMove);
 }
 
 function safeClick(elBtn) {
