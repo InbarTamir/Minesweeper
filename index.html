@@ -7,9 +7,11 @@
 
     <body onload="initGame()" onkeyup="handleKey(event)">
         <div class="header">
-            <h2 class="timer">000</h2>
-            <h2 class="score">Score: <span>0</span></h2>
-            <button onclick="initGame()">New Game</button>
+            <h2>&#x23F1 <span class="timer">000</span></h2>
+            <h2 class="lives">Lives: <span>3</span></h2>
+            <span class="smiley" onclick="initGame()"></span>
+            <h2 class="mines-left">Mines: <span>2 </span></h2>
+            <span class="hints"></span>
             <div class="level">
                 <h4>Choose Your Level:</h4>
                 <label for="easy">Beginner</label>
@@ -21,11 +23,6 @@
             </div>
         </div>
         <div class="board-container"></div>
-        <div class="game-over">
-            <button class="btn-close" onclick="closeModal()">x</button>
-            <h3></h3>
-            <button class="btn-new-game" onclick="initGame()">New Game</button>
-        </div>
         <script src="js/main.js"></script>
         <script src="js/utils.js"></script>
     </body>
