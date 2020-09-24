@@ -9,6 +9,7 @@ const SMILEY_INIT = '&#x1F604';
 var gBoard = [];
 var gMines = [];
 var gFlags = [];
+var gMoves = [];
 var gEmptyCells = [];
 var gLevel = null;
 var gGame = null;
@@ -22,6 +23,7 @@ var gHints;
 function initGame() {
     gMines = [];
     gFlags = [];
+    gMoves = [];
     gEmptyCells = [];
     gStartTime = 0;
     gLives = 3;
@@ -31,13 +33,17 @@ function initGame() {
     gLevel = checkLevel() || { size: 4, mines: 2 };
     gGame = { isOn: true, shownCount: 0, markedCount: 0, secsPassed: 0 };
     gBoard = buildBoard();
+    renderBoard(gBoard);
     if (gGameInterval) clearInterval(gGameInterval);
+    // DOM
     document.querySelector('.smiley').innerHTML = SMILEY_INIT;
     document.querySelector('.hints').innerHTML = `<ul class="hints-list" onclick="useHint()"><li>${HINT}</li><li>${HINT}</li><li>${HINT}</li></ul>`;
     document.querySelector('.timer').innerText = '000';
     document.querySelector('.lives span').innerText = '3';
     document.querySelector('.mines-left span').innerText = gLevel.mines;
-    renderBoard(gBoard);
+    document.querySelector('.highscore span').innerText = localStorage.getItem(gLevel.size);
+    document.querySelector('.safe-left span').innerText = '3';
+    document.querySelector('.safe-click').disabled = false;
 }
 
 function checkLevel() {
@@ -110,7 +116,7 @@ function cellClicked(elCell, i, j) {
         var searchIdx = gEmptyCells.findIndex((loc) => loc.i === i && loc.j === j);
         var firstCellIdx = (searchIdx >= 0) ? gEmptyCells.splice(searchIdx, 1)[0] : null;
         gMines = locateMines(gBoard);
-        if (firstCellIdx) gEmptyCells.push(firstCellIdx);
+        if (firstCellIdx >= 0) gEmptyCells.push(firstCellIdx);
         setMinesNegsCount(gBoard);
         gGameInterval = setInterval(updateTimer, 1000);
     } else {
@@ -179,6 +185,7 @@ function gameOver() {
     clearInterval(gGameInterval);
     gGame.isOn = false;
     document.querySelector('.smiley').innerHTML = (gIsVictory) ? SMILEY_WIN : SMILEY_LOSE;
+    if (gIsVictory) checkNewHighscore();
 }
 
 function changeLevel(elRadio) {
@@ -233,11 +240,12 @@ function useHint(i, j) {
         elList.lastChild.classList.add('hint-mode');
         gIsHintMode = true;
         return;
-    } else if (i || j) {  
+    } else if (i || j) {
         renderCellsHint(i, j);
         setTimeout(() => {
             elList.lastChild.remove();
-            gIsHintMode = false;}, 1000);
+            gIsHintMode = false;
+        }, 1000);
         setTimeout(renderCellsHint, 1000, i, j);
     }
 }
@@ -257,7 +265,44 @@ function renderCellsHint(rowIdx, colIdx) {
     }
 }
 
-function handleKey(ev) {
-    if (ev.key === 'Escape') closeModal();
-    if (ev.key === 'Enter') initGame();
+function checkNewHighscore() {
+    debugger;
+    var currScore = gGame.secsPassed;
+    var currLevel = gLevel.size;
+    var highScore = localStorage.getItem(currLevel);
+    if (!highScore || currScore < highScore) localStorage.setItem(currLevel, currScore);
+    document.querySelector('.highscore span').innerText = localStorage.getItem(gLevel.size);
+}
+
+function safeClick(elBtn) {
+    var rndRow;
+    var rndCol;
+    if (!gStartTime) return;
+    elBtn.disabled = true;
+    var elClicksLeft = document.querySelector('.safe-left span');
+    var clicksLeft = +elClicksLeft.innerText;
+    if (!clicksLeft) return;
+    elClicksLeft.innerText = --clicksLeft;
+    var isSafe = false;
+    while (!isSafe) {
+        rndRow = getRandomIntInclusive(0, gBoard.length - 1);
+        rndCol = getRandomIntInclusive(0, gBoard.length - 1);
+        var rndCell = gBoard[rndRow][rndCol];
+        if (rndCell.isMine || rndCell.isMarked || rndCell.isShown) continue;
+        isSafe = true;
+    }
+    var className = getClassName({ i: rndRow, j: rndCol });
+    var elCell = document.querySelector(`.${className}`);
+    elCell.classList.remove('hide');
+    setTimeout((elBtn) => {
+        elCell.classList.add('hide');
+        elBtn.disabled = (!clicksLeft) ? true : false;}, 2000, elBtn, clicksLeft);
+}
+
+function manuallyPosition() {
+
+}
+
+function undo() {
+
 }

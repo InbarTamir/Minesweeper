@@ -3,6 +3,7 @@ body {
     color: white;
     text-align: center;
     overflow: hidden;
+    cursor: context-menu;
 }
 
 .header {
@@ -45,9 +46,57 @@ h4 {
     margin: 10px auto;
 }
 
+.highscore {
+    margin: 25px auto 5px;
+}
+
 input {
     margin-left: 0;
     margin-right: 10px;
+}
+
+input:hover {
+    cursor: pointer;
+}
+
+.buttons {
+    position: absolute;
+    width: 100%;
+    top: 75px;
+}
+
+.buttons button {
+    height: 40px;
+    width: 100px;
+    border-radius: 8px;
+    margin: 0 130px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.safe-click {
+    background-color: violet;
+}
+
+.safe-left {
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    left: -183px;
+    margin-top: 0;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+.undo {
+    background-color: darkseagreen;
 }
 
 .board-container {

@@ -5,13 +5,14 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
 
-    <body onload="initGame()" onkeyup="handleKey(event)">
+    <body onload="initGame()" onselectstart="return false;">
         <div class="header">
             <h2>&#x23F1 <span class="timer">000</span></h2>
             <h2 class="lives">Lives: <span>3</span></h2>
             <span class="smiley" onclick="initGame()"></span>
             <h2 class="mines-left">Mines: <span>2 </span></h2>
             <span class="hints"></span>
+            <h3 class="highscore">Best Time: <span></span>s</h3>
             <div class="level">
                 <h4>Choose Your Level:</h4>
                 <label for="easy">Beginner</label>
@@ -21,6 +22,12 @@
                 <label for="expert">Expert</label>
                 <input type="radio" name="level" id="expert" value="12" data-mines="30" onclick="changeLevel(this)">
             </div>
+        </div>
+        <div class="buttons">
+            <button class="safe-click" onclick="safeClick(this)">Safe Click</button>
+            <button class="undo" onclick="undo()">Undo</button>
+            <br>
+            <h4 class="safe-left"><span>3</span> clicks available</h4>
         </div>
         <div class="board-container"></div>
         <script src="js/main.js"></script>

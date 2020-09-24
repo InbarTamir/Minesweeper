@@ -75,8 +75,8 @@ function countMinesNegs(board, rowIdx, colIdx) {
 
 function updateTimer() {
   var timePassed = Date.now() - gStartTime;
-  gGame.secsPassed = timePassed;
-  var strTime = '00' + Math.floor(timePassed / 1000);
+  gGame.secsPassed = Math.floor(timePassed / 1000);
+  var strTime = '00' + gGame.secsPassed;
   var elTimer = document.querySelector('.timer');
   elTimer.innerText = strTime.substr(-3);
 }
