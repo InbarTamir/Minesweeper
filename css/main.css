@@ -15,6 +15,42 @@ body {
     margin: 0 20px;
 }
 
+.manually {
+    font-size: 28px;
+    position: relative;
+    display: inline;
+    right: 10px;
+}
+
+.manually:hover {
+    cursor: pointer;
+    text-shadow: 0 0 14px white, -2px -2px 14px white;
+}
+
+.manually .help-text {
+    font-size: 14px;
+    position: absolute;
+    top: 25px;
+    margin-left: -50px;
+}
+
+.mines-pick {
+    position: absolute;
+    top: 50px;
+    width: 100%;
+}
+
+.mines-pick h4 {
+    border-radius: 50%;
+    font-size: 22px;
+    padding: 15px 20px;
+    height: fit-content;
+    width: fit-content;
+    text-align: center;
+    background-color: black;
+    text-shadow: 0 0 14px red, -2px -2px 14px red;
+}
+
 .smiley, .hints {
     font-size: 30px;
 }
@@ -29,7 +65,7 @@ li {
     display: inline;
 }
 
-.hint-mode {
+.highlight {
     text-shadow: 0 0 14px white, -2px -2px 14px white;
 }
 
@@ -118,6 +154,7 @@ button:focus {
     text-align: center;
     font-size: 18px;
     font-weight: bold;
+    color: black;
     border: 1px dotted rgb(53, 53, 53);
     background-color: rgb(163, 163, 163);
 }
@@ -126,11 +163,20 @@ button:focus {
     cursor: pointer;
 }
 
+.mine {
+    text-shadow: -1px 0  1px black, 0 1px  1px black, 1px 0 1px black, 0 -1px 1px black;
+}
+
 .hide {
     background-color: rgb(70, 70, 70);
     border: 1px solid rgba(255, 255, 255, 0.678);
     border-bottom-color: grey;
     border-right-color: grey;
+    color: rgba(0, 0, 0, 0);
+    text-shadow: none;
+}
+
+.opts {
     color: rgba(0, 0, 0, 0);
 }
 
