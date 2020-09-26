@@ -67,6 +67,8 @@ function renderCell(location, value) {
 
 function showMines(mines) {
     for (var i = 0; i < mines.length; i++) {
+        var boom = new Audio('sounds/boom.wav');
+        boom.play();
         var idx = mines[i];
         gBoard[idx.i][idx.j].isShown = true;
         renderCell(idx, MINE);
