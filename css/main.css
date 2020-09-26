@@ -75,7 +75,7 @@ li {
 
 .mines-left span {
     display: inline-block;
-    width: 10px;
+    width: 15px;
 }
 
 h4 {
@@ -178,6 +178,7 @@ button:focus {
 
 .opts {
     color: rgba(0, 0, 0, 0);
+    text-shadow: none;
 }
 
 .flag {
