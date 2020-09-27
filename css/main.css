@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+
 body {
-    background-color: black;
-    color: white;
+    color: black;
     text-align: center;
     overflow: hidden;
     cursor: context-menu;
+    font-family: 'Iceberg', cursive;
+    background: #CE58CC;
+    background: -moz-linear-gradient(top, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
+    background: -webkit-linear-gradient(top, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
+    background: linear-gradient(to bottom, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
 }
 
 .header {
@@ -15,11 +21,16 @@ body {
     margin: 0 20px;
 }
 
+.lives-list {
+    font-size: 26px;
+}
+
 .manually {
     font-size: 28px;
     position: relative;
     display: inline;
-    right: 10px;
+    right: -5px;
+    top: -5px;
 }
 
 .manually:hover {
@@ -30,29 +41,20 @@ body {
 .manually .help-text {
     font-size: 14px;
     position: absolute;
-    top: 25px;
+    top: 30px;
     margin-left: -50px;
 }
 
-.mines-pick {
-    position: absolute;
-    top: 50px;
-    width: 100%;
+.smiley {
+    font-size: 35px;
 }
 
-.mines-pick h4 {
-    border-radius: 50%;
-    font-size: 22px;
-    padding: 15px 20px;
-    height: fit-content;
-    width: fit-content;
-    text-align: center;
-    background-color: black;
-    text-shadow: 0 0 14px red, -2px -2px 14px red;
-}
-
-.smiley, .hints {
+.hints {
     font-size: 30px;
+}
+
+.smiley:hover, .hints:hover {
+    cursor: pointer;
 }
 
 ul {
@@ -69,10 +71,6 @@ li {
     text-shadow: 0 0 14px white, -2px -2px 14px white;
 }
 
-.smiley:hover, .hints:hover {
-    cursor: pointer;
-}
-
 .mines-left span {
     display: inline-block;
     width: 15px;
@@ -82,13 +80,17 @@ h4 {
     margin: 10px auto;
 }
 
-.highscore {
-    margin: 18px auto 5px;
+.best {
+    margin: 13px auto 0;
+}
+
+.level {
+    margin-top: 10px;
 }
 
 input {
     margin-left: 0;
-    margin-right: 10px;
+    margin-right: 30px;
 }
 
 input:hover {
@@ -98,7 +100,7 @@ input:hover {
 .buttons {
     position: absolute;
     width: 100%;
-    top: 75px;
+    top: 80px;
 }
 
 .buttons button {
@@ -136,7 +138,7 @@ button:focus {
 }
 
 .board-container {
-    margin: 20px auto;
+    margin: 10px auto;
 }
 
 .board {
@@ -164,7 +166,7 @@ button:focus {
 }
 
 .mine {
-    text-shadow: -1px 0  1px black, 0 1px  1px black, 1px 0 1px black, 0 -1px 1px black;
+    text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
 }
 
 .hide {

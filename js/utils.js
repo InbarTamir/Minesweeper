@@ -49,7 +49,7 @@ function renderColor(elCell) {
             elCell.style.color = 'red';
             break;
         case '4':
-            elCell.style.color = 'violet';
+            elCell.style.color = 'blueViolet';
             break;
         case '5':
             elCell.style.color = 'chocolate';

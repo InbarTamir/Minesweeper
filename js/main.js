@@ -2,6 +2,7 @@
 const MINE = '&#x2734';
 const FLAG = '&#x1F6A9';
 const HINT = '&#x1F4A1';
+const LIFE = '&#x2764';
 const SMILEY_WIN = '&#x1F973';
 const SMILEY_LOSE = '&#x1F62B';
 const SMILEY_INIT = '&#x1F604';
@@ -21,7 +22,6 @@ var gIsHintMode;
 var gIsFirstClick;
 var gIsManualMines;
 var gLives;
-var gHints;
 
 function initGame() {
     gMines = [];
@@ -31,7 +31,6 @@ function initGame() {
     gRightClickShownCells = [];
     gStartTime = 0;
     gLives = 3;
-    gHints = 3;
     gIsVictory = false;
     gIsHintMode = false;
     gIsFirstClick = true;
@@ -44,16 +43,15 @@ function initGame() {
     // DOM
     document.querySelector('.smiley').innerHTML = SMILEY_INIT;
     document.querySelector('.hints').innerHTML = `<ul class="hints-list" onclick="useHint()"><li>${HINT}</li><li>${HINT}</li><li>${HINT}</li></ul>`;
+    document.querySelector('.lives span').innerHTML = `<ul class="lives-list"><li>${LIFE}</li><li>${LIFE}</li><li>${LIFE}</li></ul>`;
     document.querySelector('.timer').innerText = '000';
-    document.querySelector('.lives span').innerText = '3';
     document.querySelector('.mines-left span').innerText = gLevel.mines;
-    document.querySelector('.highscore span').innerText = localStorage.getItem(gLevel.size);
+    document.querySelector('.best span').innerText = localStorage.getItem(gLevel.size);
     document.querySelector('.safe-left span').innerText = '3';
     document.querySelector('.safe-click').disabled = false;
     document.querySelector('.manually').classList.remove('focus-mode');
     document.querySelector('.manually').style.display = 'inline';
     document.querySelector('.manually').classList.remove('highlight');
-    document.querySelector('.mines-pick').style.display = 'none';
 }
 
 function checkLevel() {
@@ -124,7 +122,7 @@ function cellClicked(elCell, i, j) {
     if (gIsFirstClick) {
         if (gIsManualMines) {
             if (gMines.length > gLevel.mines) return;
-            var elSpan = document.querySelector('.mines-pick span');
+            var elSpan = document.querySelector('.mines-left span');
             var pickMinesLeft = +elSpan.innerText;
 
             if (currCell.isMine) {
@@ -147,8 +145,7 @@ function cellClicked(elCell, i, j) {
                     if (gMines.length < gLevel.mines) return;
                     var elManually = document.querySelector('.manually');
                     elManually.style.display = 'none';
-                    var elDiv = document.querySelector('.mines-pick');
-                    elDiv.style.display = 'none';
+                    document.querySelector('.mines-left span').innerText = gLevel.mines;
                     gIsManualMines = false;
                     hideMines(gMines);
                 }, 1000);
@@ -186,8 +183,8 @@ function cellClicked(elCell, i, j) {
             currCell.isShown = true;
             gGame.shownCount++;
             gLives--;
-            var elLives = document.querySelector('.lives span');
-            elLives.innerText = gLives;
+            var elLives = document.querySelector('.lives-list');
+            elLives.lastChild.remove();
             var elMinesLeft = document.querySelector('.mines-left span');
             elMinesLeft.innerText = +elMinesLeft.innerText - 1;
             if (gLives) {
@@ -226,7 +223,14 @@ function cellMarked(elCell, i, j) {
         if (minesLeftCount > 0) elMinesLeft.innerText = minesLeftCount - 1;
         renderCell(flag.location, FLAG);
     } else { // Remove Flag
-        var flagIdx = findIndex(gFlags, i, j);
+        var flagIdx;
+        for (var idx = 0; idx < gFlags.length; idx++) {
+            var currFlagLoc = gFlags[idx].location;
+            if (currFlagLoc.i === i && currFlagLoc.j === j) {
+                flagIdx = idx;
+                break;
+            }
+        }
         var currFlag = (flagIdx >= 0) ? gFlags.splice(flagIdx, 1)[0] : null;
         currCell.isMarked = false;
         gGame.markedCount--;
@@ -322,7 +326,7 @@ function checkNewHighscore() {
     if (!highScore || currScore < highScore) {
         localStorage.setItem(currLevel, currScore);
     }
-    var elBest = document.querySelector('.highscore span');
+    var elBest = document.querySelector('.best span');
     elBest.innerText = localStorage.getItem(gLevel.size);
 }
 
@@ -358,17 +362,12 @@ function manualMinesPick(elDiv) {
     if (gIsManualMines) {
         gIsManualMines = false;
         elDiv.classList.remove('highlight');
-        var elMinesPick = document.querySelector('.mines-pick');
-        elMinesPick.style.display = 'none';
+        document.querySelector('.mines-left span').innerText = gLevel.mines;
         hideMines(gMines);
         return;
     }
     gIsManualMines = true;
     elDiv.classList.add('highlight');
-    var elSpan = document.querySelector('.mines-pick span');
-    elSpan.innerText = gLevel.mines;
-    var elMinesPick = document.querySelector('.mines-pick');
-    elMinesPick.style.display = 'block';
 }
 
 function handleClick(ev, elCell, i, j) {
@@ -468,16 +467,17 @@ function undo() {
     for (var i = 0; i < elNumbers.length; i++) {
         renderColor(elNumbers[i]);
     }
-    document.querySelector('.lives span').innerText = gLives;
+    document.querySelector('.lives span').innerHTML = prevState.elLives;
     document.querySelector('.mines-left span').innerText = prevState.minesLeft;
 }
 
 function saveHistory() {
     var currState = {
         board: [],
-        flags: Object.assign({}, gFlags),
+        flags: gFlags.slice(),
         game: Object.assign({}, gGame),
         lives: gLives,
+        elLives: document.querySelector('.lives span').innerHTML,
         minesLeft: +document.querySelector('.mines-left span').innerText
     };
     var copyBoard = [];
