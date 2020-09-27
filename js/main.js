@@ -9,7 +9,7 @@ const SMILEY_INIT = '&#x1F604';
 var gBoard = [];
 var gMines = [];
 var gFlags = [];
-var gMoves = [];
+var gHistory = [];
 var gEmptyCells = [];
 var gRightClickShownCells = [];
 var gLevel = null;
@@ -26,7 +26,7 @@ var gHints;
 function initGame() {
     gMines = [];
     gFlags = [];
-    gMoves = [];
+    gHistory = [];
     gEmptyCells = [];
     gRightClickShownCells = [];
     gStartTime = 0;
@@ -168,6 +168,7 @@ function cellClicked(elCell, i, j) {
         }
         setMinesNegsCount(gBoard);
         gGameInterval = setInterval(updateTimer, 1000);
+        saveHistory();
         if (!currCell.isMine) {
             expandShown(gBoard, i, j);
             checkGameOver();
@@ -175,12 +176,13 @@ function cellClicked(elCell, i, j) {
         }
     }
     if (gGame.isOn) {
+        saveHistory();
         if (gIsHintMode) {
             useHint(i, j);
             return;
         }
         if (currCell.isMine) {
-            elCell.style.backgroundColor = 'red';
+            elCell.classList.add('red');
             currCell.isShown = true;
             gGame.shownCount++;
             gLives--;
@@ -206,7 +208,7 @@ function cellClicked(elCell, i, j) {
 function cellMarked(elCell, i, j) {
     var currCell = gBoard[i][j];
     if (!gGame.isOn || currCell.isShown) return;
-
+    saveHistory();
     if (!currCell.isMarked) { // Add Flag
         if (gGame.markedCount === gLevel.mines) return;
         var flag = {
@@ -400,6 +402,7 @@ function showClickOpts(board, rowIdx, colIdx) {
     }
     var minesAroundCount = board[rowIdx][colIdx].minesAroundCount;
     if (minesMarked === minesAroundCount) {
+        saveHistory();
         gRightClickShownCells = [];
         expandShown(board, rowIdx, colIdx);
         return;
@@ -444,5 +447,46 @@ function gameOver() {
 }
 
 function undo() {
-    
+    if (!gGame.isOn) return;
+    var prevState = gHistory.pop();
+    if (!prevState) return;
+    if (!gHistory.length) {
+        clearInterval(gGameInterval);
+        gStartTime = Date.now();
+        updateTimer();
+        gIsFirstClick = true;
+    } else {
+        gStartTime = Date.now() - prevState.game.secsPassed * 1000;
+        updateTimer();
+    }
+    gBoard = prevState.board;
+    gFlags = prevState.flags;
+    gGame = prevState.game;
+    gLives = prevState.lives;
+    renderBoard(gBoard);
+    var elNumbers = document.querySelectorAll('.color');
+    for (var i = 0; i < elNumbers.length; i++) {
+        renderColor(elNumbers[i]);
+    }
+    document.querySelector('.lives span').innerText = gLives;
+    document.querySelector('.mines-left span').innerText = prevState.minesLeft;
+}
+
+function saveHistory() {
+    var currState = {
+        board: [],
+        flags: Object.assign({}, gFlags),
+        game: Object.assign({}, gGame),
+        lives: gLives,
+        minesLeft: +document.querySelector('.mines-left span').innerText
+    };
+    var copyBoard = [];
+    for (var i = 0; i < gBoard.length; i++) {
+        copyBoard.push([]);
+        for (var j = 0; j < gBoard.length; j++) {
+            copyBoard[i].push(Object.assign({}, gBoard[i][j]));
+        }
+    }
+    currState.board = copyBoard;
+    gHistory.push(currState);
 }

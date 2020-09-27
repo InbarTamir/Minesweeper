@@ -83,7 +83,7 @@ h4 {
 }
 
 .highscore {
-    margin: 25px auto 5px;
+    margin: 18px auto 5px;
 }
 
 input {
@@ -184,4 +184,8 @@ button:focus {
 .flag {
     color: black;
     font-size: 15px;
+}
+
+.red {
+    background-color: red;
 }
