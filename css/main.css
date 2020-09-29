@@ -6,9 +6,6 @@ body {
     overflow: hidden;
     cursor: context-menu;
     font-family: 'Iceberg', cursive;
-    background: #CE58CC;
-    background: -moz-linear-gradient(top, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
-    background: -webkit-linear-gradient(top, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
     background: linear-gradient(to bottom, #CE58CC 0%, #AE9121 46%, #58B86F 100%);
 }
 
